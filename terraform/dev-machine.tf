@@ -75,6 +75,11 @@ resource "azurerm_public_ip" "dev-ip" {
   allocation_method   = "Dynamic"
 }
 
+data "azurerm_image" "dev" {
+  name = "nextcloudDev-2021-06-23T203300Z"
+  resource_group_name = azurerm_resource_group.nextcloud.name
+}
+
 resource "azurerm_linux_virtual_machine" "dev" {
   name                            = "frodux-nextcloud-dev"
   location                        = azurerm_resource_group.nextcloud.location
@@ -97,10 +102,12 @@ resource "azurerm_linux_virtual_machine" "dev" {
     storage_account_type = "StandardSSD_LRS"
   }
 
-  source_image_reference {
-    publisher = "canonical"
-    offer     = "0001-com-ubuntu-server-focal"
-    sku       = "20_04-lts-gen2"
-    version   = "latest"
-  }
+  source_image_id = data.azurerm_image.dev.id
+
+  /* source_image_reference { */
+  /*   publisher = "canonical" */
+  /*   offer     = "0001-com-ubuntu-server-focal" */
+  /*   sku       = "20_04-lts-gen2" */
+  /*   version   = "latest" */
+  /* } */
 }

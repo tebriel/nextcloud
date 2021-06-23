@@ -7,11 +7,6 @@ provider "azurerm" {
   features {}
 }
 
-provider "aws" {
-  region  = "us-east-1"
-  profile = "personal"
-}
-
 terraform {
   required_providers {
     azurerm = {

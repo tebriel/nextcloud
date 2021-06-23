@@ -4,5 +4,6 @@ pkgs.mkShell {
   buildInputs = [
     pkgs.azure-cli
     pkgs.terraform_1_0
+    pkgs.packer
   ];
 }
