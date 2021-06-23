@@ -103,11 +103,4 @@ resource "azurerm_linux_virtual_machine" "dev" {
   }
 
   source_image_id = data.azurerm_image.dev.id
-
-  /* source_image_reference { */
-  /*   publisher = "canonical" */
-  /*   offer     = "0001-com-ubuntu-server-focal" */
-  /*   sku       = "20_04-lts-gen2" */
-  /*   version   = "latest" */
-  /* } */
 }
