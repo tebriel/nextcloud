@@ -5,5 +5,6 @@ pkgs.mkShell {
     pkgs.azure-cli
     pkgs.terraform_1_0
     pkgs.packer
+    pkgs.vagrant
   ];
 }

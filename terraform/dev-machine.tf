@@ -11,6 +11,14 @@ resource "azurerm_dns_a_record" "next-dev" {
   target_resource_id  = azurerm_public_ip.dev-ip.id
 }
 
+resource "azurerm_dns_a_record" "nextcloud" {
+  name                = "@"
+  zone_name           = data.azurerm_dns_zone.nextcloud.name
+  resource_group_name = azurerm_resource_group.nextcloud.name
+  ttl                 = 60
+  target_resource_id  = azurerm_public_ip.dev-ip.id
+}
+
 resource "azurerm_virtual_network" "vnet" {
   name                = "nextcloud-vnet"
   address_space       = ["10.1.0.0/16"]
@@ -76,7 +84,7 @@ resource "azurerm_public_ip" "dev-ip" {
 }
 
 data "azurerm_image" "dev" {
-  name = "nextcloudDev-2021-06-23T203300Z"
+  name = "nextcloudDev-2021-06-25T173214Z"
   resource_group_name = azurerm_resource_group.nextcloud.name
 }
 

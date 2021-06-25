@@ -19,7 +19,7 @@ build {
 
   provisioner "shell" {
     scripts = [
-      "./scripts/base_requirements.sh",
+      "./scripts/nextcloud.sh",
     ]
   }
 
