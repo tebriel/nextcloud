@@ -10,23 +10,21 @@ echo "Sleeping for 30 seconds"
 sleep 30
 echo "Done Sleeping"
 
-install_prereqs() {
-    sudo apt-get update
-    sudo apt-get install -y apache2 mariadb-server libapache2-mod-php7.4
-    sudo apt-get install -y php7.4-gd php7.4-mysql php7.4-curl php7.4-mbstring php7.4-intl
-    sudo apt-get install -y php7.4-gmp php7.4-bcmath php-imagick php7.4-xml php7.4-zip
-}
+install_certbot() {
+    # Enable SSL
+    sudo a2enmod ssl
+    sudo a2ensite default-ssl
+    sudo service apache2 reload
 
-bootstrap_database() {
-    sudo /etc/init.d/mysql start
+    sudo snap install core
+    sudo snap refresh core
+    sudo snap install --classic certbot
+    sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
-    cat > /tmp/create_db.sql<<EOF
-CREATE USER 'nextcloud'@'localhost' IDENTIFIED BY 'password';
-CREATE DATABASE IF NOT EXISTS nextcloud CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'localhost';
-FLUSH PRIVILEGES;
-EOF
-    sudo mysql -uroot < /tmp/create_db.sql
+    sudo mv /tmp/letsencrypt.sh /usr/local/sbin/
+    sudo chown root:root /usr/local/sbin/letsencrypt.sh
+    sudo chmod 755 /usr/local/sbin/letsencrypt.sh
+    sudo mv /tmp/letsencrypt.service /etc/systemd/system/
 }
 
 install_nextcloud() {
@@ -83,12 +81,15 @@ configure_nextcloud() {
         "mysql" --database-name "nextcloud"  --database-user "nextcloud" --database-pass \
         "password" --admin-user "admin" --admin-pass "password"
     # Sets the 2nd domain (1st is localhost) to nextcloud.frodux.in
-    sudo -u www-data php occ config:system:set trusted_domains 2 --value=nextcloud.frodux.in
+    sudo -u www-data php occ config:system:set trusted_domains 1 --value=nextcloud.frodux.in
+    # Make the URLs Pretty
+    sudo -u www-data php occ config:system:set overwrite.cli.url --value='https://nextcloud.frodux.in/'
+    sudo -u www-data php occ config:system:set htaccess.RewriteBase --value='/'
+    sudo -u www-data php /var/www/nextcloud/occ maintenance:update:htaccess
 }
 
 # Do it
-install_prereqs
-bootstrap_database
 install_nextcloud
+# install_certbot
 configure_apache
 configure_nextcloud

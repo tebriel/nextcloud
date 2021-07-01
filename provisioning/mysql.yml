@@ -1,0 +1,35 @@
+---
+- name: Configure MySQL
+  hosts: all
+  tasks:
+    - name: Install MySQL
+      become: yes
+      ansible.builtin.apt:
+        update_cache: true
+        name:
+          - mariadb-server
+          - python3
+          - python3-pip
+    - name: Install MySQL Ansible Requirements
+      become: yes
+      ansible.builtin.pip:
+        name:
+          - pymysql
+    - name: Create Nextcloud DB
+      become: yes
+      community.mysql.mysql_db:
+        name: nextcloud
+        state: present
+        encoding: utf8mb4
+        collation: utf8mb4_general_ci
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+    - name: Create Nextcloud User
+      become: yes
+      community.mysql.mysql_user:
+        name: nextcloud
+        password: password # "{{ db_password.secret }}"
+        host: localhost
+        priv:
+          'nextcloud.*': 'ALL,GRANT'
+        state: present
+        login_unix_socket: /var/run/mysqld/mysqld.sock

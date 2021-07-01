@@ -1,0 +1,15 @@
+---
+- name: Install Certbot
+  hosts: all
+  tasks:
+    - name: Install Snap Core
+      become: yes
+      community.general.snap:
+        name:
+          - core
+    - name: Install Certbot
+      become: yes
+      community.general.snap:
+        name:
+          - certbot
+        classic: yes

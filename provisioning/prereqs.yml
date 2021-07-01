@@ -1,0 +1,19 @@
+---
+- name: Install Pre-Requisites
+  hosts: all
+  tasks:
+    - name: Base Requirements
+      become: yes
+      ansible.builtin.apt:
+        update_cache: true
+        name:
+          - php7.4-gd
+          - php7.4-mysql
+          - php7.4-curl
+          - php7.4-mbstring
+          - php7.4-intl
+          - php7.4-gmp
+          - php7.4-bcmath
+          - php-imagick
+          - php7.4-xml
+          - php7.4-zip

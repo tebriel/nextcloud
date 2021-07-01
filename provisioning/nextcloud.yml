@@ -1,0 +1,11 @@
+---
+# - name: Fetch Secrets
+#   import_playbook: secrets.yml
+- name: Install Pre-Reqs
+  import_playbook: prereqs.yml
+- name: Configure MySQL
+  import_playbook: mysql.yml
+- name: Install Certbot
+  import_playbook: certbot.yml
+- name: Install Nextcloud
+  import_playbook: nextcloud-install.yml

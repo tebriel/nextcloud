@@ -1,0 +1,17 @@
+---
+- hosts: all
+  become: yes
+  roles:
+    - role: caddy_ansible.caddy_ansible
+      caddy_systemd_capabilities_enabled: true
+      caddy_config: |
+        nextcloud.frodux.in
+
+        root * /var/www/nextcloud
+        php_fastcgi /
+  tasks:
+    - name: Install fpm
+      ansible.builtin.apt:
+        update_cache: true
+        name:
+          - php7.4-fpm

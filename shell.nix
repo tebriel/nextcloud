@@ -4,7 +4,9 @@ pkgs.mkShell {
   buildInputs = [
     pkgs.azure-cli
     pkgs.terraform_1_0
+    pkgs.terraform-providers.azurerm
     pkgs.packer
     pkgs.vagrant
+    pkgs.ansible_2_10
   ];
 }

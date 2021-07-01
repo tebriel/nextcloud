@@ -17,6 +17,11 @@ source "azure-arm" "dev-box" {
 build {
   sources = ["sources.azure-arm.dev-box"]
 
+  provisioner "file" {
+    source = "./scripts/letsencrypt.sh"
+    destination = "/tmp/letsencrypt.sh"
+  }
+
   provisioner "shell" {
     scripts = [
       "./scripts/nextcloud.sh",

@@ -1,0 +1,14 @@
+[Unit]
+Description=Generate letsencrypt certificate on startup
+Requires=apache2
+After=network.target
+After=apache2
+
+[Service]
+Type=simple
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/lestencrypt.sh
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target

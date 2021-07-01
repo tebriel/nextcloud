@@ -1,0 +1,29 @@
+---
+- name: Install NextCloud
+  hosts: all
+  vars:
+    nextcloud_version: 21.0.2
+    nextcloud_release_url: https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.tar.bz2
+    nextcloud_release_sha: sha256:https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud_version }}.tar.bz2.sha256
+  tasks:
+    - name: Download Release
+      ansible.builtin.get_url:
+        url: "{{ nextcloud_release_url }}"
+        dest: /tmp/nextcloud-{{ nextcloud_version }}.tar.bz2
+        checksum: "{{ nextcloud_release_sha }}"
+      register: release_file
+    - name: Create www directory
+      become: yes
+      ansible.builtin.file:
+        state: directory
+        path: /var/www
+        owner: www-data
+        group: www-data
+    - name: Extract Release
+      become: yes
+      ansible.builtin.unarchive:
+        remote_src: yes
+        src: "{{ release_file.dest }}"
+        dest: /var/www
+        owner: www-data
+        group: www-data
